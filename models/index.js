@@ -5,51 +5,38 @@ const Tag = require('./Tag');
 const ProductTag = require('./ProductTag');
 
 // Products belongsTo Category
-
 Product.belongsTo(Category, {
   foreignKey: 'category_id',
-  onDelete: "CASCADE"
-})
+  onDelete: 'CASCADE'
+});
 
 // Categories have many Products
-
 Category.hasMany(Product, {
-  onDelete: 'CASCADE'
-})
-
-// Products belongToMany Tags (through ProductTag)
-
-Product.belongsToMany (Category, {
-  through: 'ProductTag',
-  inverse: {as:'linkers',},
-  throughAssociations: {
-    fromSource: 'ProductTagLinkers',
-    toSource: 'Linker',
-    fromTarget: 'linkersProductTag',
-    toTarget: 'ProductTag'
-  },
   foreignKey: 'category_id',
   onDelete: 'CASCADE'
-})
+});
+
+// Products belongToMany Tags (through ProductTag)
+Product.belongsToMany(Tag, {
+  through: ProductTag,
+  foreignKey: 'product_id',
+  onDelete: 'CASCADE'
+});
 
 // Tags belongToMany Products (through ProductTag)
-
-Tag.belongsToMany (Product, {
-  through: 'ProductTag',
-  inverse: {as:'linkers',},
-  throughAssociations: {
-    fromSource: 'ProductTagLinkers',
-    toSource: 'Linker',
-    fromTarget: 'linkersProductTag',
-    toTarget: 'ProductTag'
-  },
+Tag.belongsToMany(Product, {
+  through: ProductTag,
   foreignKey: 'tag_id',
   onDelete: 'CASCADE'
-})
+});
+
+// Define association alias for the through table ProductTag
+ProductTag.belongsTo(Product, { foreignKey: 'product_id' });
+ProductTag.belongsTo(Tag, { foreignKey: 'tag_id' });
 
 module.exports = {
   Product,
   Category,
   Tag,
-  ProductTag,
+  ProductTag
 };
