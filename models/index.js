@@ -35,6 +35,14 @@ Product.belongsToMany (Category, {
 // Tags belongToMany Products (through ProductTag)
 
 Tag.belongsToMany (Product, {
+  through: 'ProductTag',
+  inverse: {as:'linkers',},
+  throughAssociations: {
+    fromSource: 'ProductTagLinkers',
+    toSource: 'Linker',
+    fromTarget: 'linkersProductTag',
+    toTarget: 'ProductTag'
+  },
   foreignKey: 'tag_id',
   onDelete: 'CASCADE'
 })
